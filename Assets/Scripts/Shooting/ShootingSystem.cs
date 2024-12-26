@@ -26,6 +26,7 @@ namespace Assets.Scripts
             }.ScheduleParallel();
         }
     }
+    [BurstCompile] 
     public partial struct ShootingJob : IJobEntity
     {
         public EntityCommandBuffer.ParallelWriter Ecb;
@@ -35,10 +36,10 @@ namespace Assets.Scripts
         [ReadOnly] public ComponentLookup<LocalTransform> TransformLookup;
 
         [BurstCompile]
-        public void Execute([ChunkIndexInQuery] in int index, ref Shooter shooter, in LocalTransform transform)
+        public void Execute([ChunkIndexInQuery] in int index, ref Shooter shooter,in Actor actor, in LocalTransform transform)
         {
             shooter.LastTimeShoot -= DeltaTime;
-            if (shooter.LastTimeShoot > 0 || shooter.Direction.Equals(float3.zero)) return;
+            if (shooter.LastTimeShoot > 0 || actor.Direction.Equals(float3.zero)) return;
 
             shooter.LastTimeShoot = shooter.Cooldown;
 
@@ -48,7 +49,7 @@ namespace Assets.Scripts
             var bulletMover = MoverLookup[shooter.ProjectilePrefab];
 
             bulletTransform.Position = transform.Position;
-            bulletMover.Direction = shooter.Direction;
+            bulletMover.Direction = actor.Direction;
 
             Ecb.SetComponent(index, bullet, bulletTransform);
             Ecb.SetComponent(index, bullet, bulletMover);

@@ -58,6 +58,7 @@ namespace Assets.Scripts
         }
     }
 
+    [BurstCompile]
     public partial struct MoverJob : IJobEntity
     {
         public float DeltaTime;

@@ -20,7 +20,8 @@ namespace Assets.Scripts
                     Radius = authoring.Radius,
                     CountAtTime = authoring.CountAtTime,
                     Delay = authoring.Delay,
-                    Prefab = GetEntity(authoring.Prefab,TransformUsageFlags.Dynamic)
+                    Prefab = GetEntity(authoring.Prefab,TransformUsageFlags.Dynamic),
+                    Timer = authoring.Delay
                 });
             }
         }
@@ -34,9 +35,10 @@ namespace Assets.Scripts
 
     public struct EnemySpawnerData : IComponentData
     {
+        public Entity Prefab;
         public float Radius;
         public float Delay;
         public int CountAtTime;
-        public Entity Prefab;
+        public float Timer;
     }
 }

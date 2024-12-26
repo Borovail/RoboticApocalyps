@@ -10,7 +10,6 @@ namespace Assets.Scripts
             public override void Bake(EnemyAuthoring authoring)
             {
                 AddComponent(GetEntity(TransformUsageFlags.None), new Enemy());
-                AddComponent(GetEntity(TransformUsageFlags.Dynamic),new LifeTime{Value = 10});
             }
         }
     }
