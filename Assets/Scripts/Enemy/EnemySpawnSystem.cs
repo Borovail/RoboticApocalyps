@@ -84,7 +84,6 @@ namespace Assets.Scripts
 
             for (var i = 0; i < enemies.Length; i++)
             {
-                var entity = enemies[i];
                 float angle = 2f * math.PI * i / enemySpawnerData.CountAtTime;
                 float x = math.cos(angle);
                 float y = math.sin(angle);
@@ -93,7 +92,7 @@ namespace Assets.Scripts
 
                 var transform = TransformLookup[enemySpawnerData.Prefab];
                 transform.Position = new float3(units.x, 1f, units.y);
-                CommandBuffer.SetComponent(index, entity, transform);
+                CommandBuffer.SetComponent(index, enemies[i], transform);
             }
         }
     }
