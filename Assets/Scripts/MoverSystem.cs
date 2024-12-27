@@ -64,8 +64,7 @@ namespace Assets.Scripts
         public float DeltaTime;
 
         [BurstCompile]
-        private void Execute([ChunkIndexInQuery] in int index,
-            ref LocalTransform transform, ref Mover mover, ref PhysicsVelocity velocity, in PhysicsMass mass)
+        private void Execute(ref LocalTransform transform, ref Mover mover, ref PhysicsVelocity velocity, in PhysicsMass mass)
         {
             // Movement
             var direction = mover.Direction;

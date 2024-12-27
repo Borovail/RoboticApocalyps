@@ -2,6 +2,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -54,6 +55,7 @@ namespace Assets.Scripts
 
                 var closestDistance = float.MaxValue;
                 var closestTarget = float3.zero;
+                actor.ValueRW.Direction = float3.zero;
 
                 foreach (var (target, targetTransform, targetEntity)
                          in SystemAPI.Query<RefRO<Target>, RefRO<LocalTransform>>().WithEntityAccess())

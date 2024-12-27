@@ -1,31 +1,42 @@
 ﻿using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Physics.Systems;
 using Unity.Physics;
+using Unity.Physics.Extensions;
 using UnityEngine;
+using UnityEngine.LightTransport;
 
 namespace Assets.Scripts
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
-    [UpdateBefore(typeof(PhysicsSimulationGroup))] // We are updating before `PhysicsSimulationGroup` - this means that we will get the events of the previous frame
+    [UpdateAfter(typeof(PhysicsSimulationGroup))]
     public partial struct CollisionDetectSystem : ISystem
     {
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            var ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
+                .CreateCommandBuffer(state.WorldUnmanaged);
 
-            state.Dependency = new CountNumCollisionEvents()
-                .Schedule(SystemAPI.GetSingleton<SimulationSingleton>(), state.Dependency);
+            state.Dependency = new CountNumCollisionEvents
+            {
+                Ecb = ecb
+            }.Schedule(SystemAPI.GetSingleton<SimulationSingleton>(), state.Dependency);
         }
     }
 
     [BurstCompile]
-    public partial struct CountNumCollisionEvents : ICollisionEventsJob
+    public partial struct CountNumCollisionEvents : ITriggerEventsJob
     {
-        public void Execute(CollisionEvent collisionEvent)
+
+        public EntityCommandBuffer Ecb;
+
+        public void Execute(TriggerEvent collisionEvent)
         {
-            Debug.Log("Collision");
+            Ecb.DestroyEntity(collisionEvent.EntityA);
+            Ecb.DestroyEntity(collisionEvent.EntityB);
         }
     }
 }
